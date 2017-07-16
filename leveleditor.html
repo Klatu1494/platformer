@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Level editor</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="leveleditor/style.css">
+  <script src="compiled/leveleditor/classes/TileType.js"></script>
+  <script src="compiled/leveleditor/classes/Tool.js"></script>
+  <script src="compiled/leveleditor/main.js"></script>
+</head>
+
+<body>
+  <div id="left-bar">
+    <h2>Tile types</h2>
+    <div id="default-tile-type-div">
+      <label for="default-tile-type">Default tile type</label>
+    </div>
+    <div id="selected-tile-type-div">
+      <label for="selected-tile-type">Selected tile type</label>
+    </div>
+    <div>
+      <button id="create-tile-type-button" class="btn btn-primary">Add tile type</button>
+    </div>
+  </div>
+  <div id="right-bar">
+    <div id="editor">
+      <table>
+        <tr>
+          <td id="expand-nw">⬁</td>
+          <td id="expand-n">⇧</td>
+          <td id="expand-ne">⬀</td>
+        </tr>
+        <tr>
+          <td id="expand-w">⇦</td>
+          <td id="canvas-td"></td>
+          <td id="expand-e">⇨</td>
+        </tr>
+        <tr>
+          <td id="expand-sw">⬃</td>
+          <td id="expand-s">⇩</td>
+          <td id="expand-se">⬂</td>
+        </tr>
+      </table>
+    </div>
+    <div id="output"></div>
+  </div>
+  <div id="create-tile-type-popup-container">
+    <div class="popup">
+      <div id="new-tile-type-name-div">
+        <label for="new-tile-type-name">Name:</label>
+      </div>
+      <div id="new-tile-type-char-div">
+        <label for="new-tile-type-char">
+        Character that represents this tile type:
+      </label>
+      </div>
+      <div id="new-tile-type-color-div">
+        <label for="new-tile-type-color">
+        Color that represents this tile type:
+      </label>
+      </div>
+      <div id="create-tile-type-popup-button-container">
+        <button id="create-tile-type-popup-button" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
