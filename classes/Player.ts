@@ -20,7 +20,12 @@ class Player {
         this.position = new Point(x, y);
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillRect(Math.floor(this.position.x), Math.floor(this.position.y), Math.ceil(this._side), Math.ceil(this._side));
+    draw(ctx: CanvasRenderingContext2D, tileSide: number, leftMargin: number, topMargin: number) {
+        ctx.fillRect(
+            Math.floor(leftMargin + this.position.x * tileSide),
+            Math.floor(topMargin + this.position.y * tileSide),
+            Math.ceil(tileSide),
+            Math.ceil(tileSide)
+        );
     }
 }

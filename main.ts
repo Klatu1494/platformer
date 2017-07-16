@@ -2,14 +2,22 @@ addEventListener("load", () => {
     function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         player.move(pressedKeys);
-        player.draw(ctx);
+        player.draw(ctx, tileSide, leftMargin, topMargin);
         requestAnimationFrame(loop);
     }
 
     function startLevel() {
         var level = levels[currentLevel];
-        level.draw();
+        level.draw(tileSide, leftMargin, topMargin);
         level.movePlayerToStartingPosition(player);
+    }
+
+    function onResize() {
+        var level = levels[currentLevel];
+        tileSide = Math.min(innerWidth / level.width, innerHeight / level.height);
+        leftMargin = (innerWidth - level.width * tileSide) / 2;
+        topMargin = (innerHeight - level.height * tileSide) / 2;
+        level.draw(tileSide, leftMargin, topMargin);
     }
 
     var canvas = document.createElement("canvas");
@@ -21,10 +29,15 @@ addEventListener("load", () => {
     );
     var levels = [
         new Level(
-            [["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"], ["W", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W", "W", "W", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", "W", "W", "W", "W", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]]
+            [["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"], ["W", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W", "W", "W", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", "W", "W", "W", "W", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", " ", " ", " ", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", "W"], ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]],
+            1
         )
-    ]
+    ];
     var currentLevel: number = 0;
+    var leftMargin: number;
+    var topMargin: number;
+    var tileSide: number;
+    onResize();
     startLevel();
     canvas.width = innerWidth;
     canvas.height = innerHeight;
@@ -32,6 +45,6 @@ addEventListener("load", () => {
     document.body.appendChild(canvas);
     addEventListener("keydown", (e: KeyboardEvent) => pressedKeys[e.which] = true);
     addEventListener("keyup", (e: KeyboardEvent) => pressedKeys[e.which] = false);
-    addEventListener("resize", () => levels[currentLevel].draw());
+    addEventListener("resize", onResize);
     requestAnimationFrame(loop);
 });
