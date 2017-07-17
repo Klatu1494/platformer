@@ -1,3 +1,4 @@
 interface IAssets {
-    wallImage: HTMLImageElement;
+    wall?: HTMLImageElement;
+    water?: HTMLImageElement;
 }

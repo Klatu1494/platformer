@@ -22,19 +22,33 @@ class Player {
         var xDirection: number;
         var yDirection: number;
         var tile: Tile;
+        //horizontal movement
         if (pressedKeys[this._primaryControls.left] || pressedKeys[this._secondaryControls.left])
             this._horizontalSpeed -= this._acceleration;
         if (pressedKeys[this._primaryControls.right] || pressedKeys[this._secondaryControls.right])
             this._horizontalSpeed += this._acceleration;
-        this._verticalSpeed += this._weight;
-        if (this._onGround && (pressedKeys[this._primaryControls.up] || pressedKeys[this._secondaryControls.up])) {
-            this._onGround = false;
-            this._verticalSpeed = -this._maxVerticalSpeed;
-        }
         xDirection = Math.sign(this._horizontalSpeed);
-        yDirection = Math.sign(this._verticalSpeed);
         this._horizontalSpeed = xDirection * Math.max(0, Math.min(Math.abs(this._horizontalSpeed), this._maxHorizontalSpeed) - this._friction);
-        this._verticalSpeed = yDirection * Math.min(Math.abs(this._verticalSpeed), this._maxVerticalSpeed);
+        //vertical movement
+        if (this.isInWater(level)) {
+            if ((pressedKeys[this._primaryControls.up] || pressedKeys[this._secondaryControls.up])) {
+                this._verticalSpeed -= this._acceleration;
+            }
+            if ((pressedKeys[this._primaryControls.down] || pressedKeys[this._secondaryControls.down])) {
+                this._verticalSpeed += this._acceleration;
+            }
+            yDirection = Math.sign(this._verticalSpeed);
+            this._verticalSpeed = yDirection * Math.max(0, Math.min(Math.abs(this._verticalSpeed), this._maxVerticalSpeed) - this._friction);
+        }
+        else {
+            this._verticalSpeed += this._weight;
+            if (this._onGround && (pressedKeys[this._primaryControls.up] || pressedKeys[this._secondaryControls.up])) {
+                this._onGround = false;
+                this._verticalSpeed = -this._maxVerticalSpeed;
+            }
+            yDirection = Math.sign(this._verticalSpeed);
+            this._verticalSpeed = yDirection * Math.min(Math.abs(this._verticalSpeed), this._maxVerticalSpeed);
+        }
         x += this._horizontalSpeed;
         y += this._verticalSpeed;
         tile = level.getTileThatCollidesWith(new Point(x, y + 0.25));
@@ -94,5 +108,13 @@ class Player {
         this._horizontalSpeed = 0;
         this._verticalSpeed = 0;
         this._onGround = false;
+    }
+
+
+    isInWater(level: Level): boolean {
+        return level.pointInWater(new Point(this.position.x, this.position.y)) &&
+            level.pointInWater(new Point(this.position.x + 1, this.position.y)) &&
+            level.pointInWater(new Point(this.position.x, this.position.y + 1)) &&
+            level.pointInWater(new Point(this.position.x + 1, this.position.y + 1));
     }
 }

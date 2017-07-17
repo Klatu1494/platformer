@@ -13,6 +13,9 @@ class TileType {
         var selectedOption: HTMLOptionElement = document.createElement("option");
         defaultOption.innerText = name;
         selectedOption.innerText = name;
+        TileType.usedNames.add(name);
+        TileType.usedChars.add(char);
+        TileType.usedColors.add(color);
         this.name = name;
         this.char = char;
         this.color = color;

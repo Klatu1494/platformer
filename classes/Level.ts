@@ -3,6 +3,7 @@ class Level {
     private _width: number;
     private _height: number;
     private _walls: Array<Tile>;
+    private _water: Array<Tile>;
     private _startingPosition: Point;
     private _assets: IAssets;
 
@@ -14,11 +15,15 @@ class Level {
         this._height = height * charSize;
         this._assets = assets;
         this._walls = [];
+        this._water = [];
         for (var i: number = 0; i < height; i++) {
             for (var j: number = 0; j < array[i].length; j++) {
                 switch (array[i][j]) {
                     case "W":
                         this._walls.push(new Tile(new Point(j * charSize, i * charSize), charSize));
+                        break;
+                    case "w":
+                        this._water.push(new Tile(new Point(j * charSize, i * charSize), charSize));
                         break;
                     case "X":
                         this._startingPosition = new Point(j * charSize, i * charSize);
@@ -58,14 +63,25 @@ class Level {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.translate(leftMargin, topMargin);
         for (var wall of this._walls)
-            if (this._assets.wallImage)
+            if (this._assets.wall)
                 ctx.drawImage(
-                    this._assets.wallImage,
+                    this._assets.wall,
                     Math.floor(wall.left * tileSide),
                     Math.floor(wall.top * tileSide),
                     Math.ceil(wall.side * tileSide),
                     Math.ceil(wall.side * tileSide)
                 );
+            else throw new Error();
+        for (var water of this._water)
+            if (this._assets.water)
+                ctx.drawImage(
+                    this._assets.water,
+                    Math.floor(water.left * tileSide),
+                    Math.floor(water.top * tileSide),
+                    Math.ceil(water.side * tileSide),
+                    Math.ceil(water.side * tileSide)
+                );
+            else throw new Error();
         ctx.translate(-leftMargin, -topMargin);
     }
 
@@ -77,12 +93,12 @@ class Level {
         return this._height;
     }
 
-    //change Player to Creature when Creature is implemented
-    moveCreatureToPoint(creature: Player, point: Point) {
-        creature.position = point;
+    movePlayerToStartingPosition(player: Player) {
+        player.position = this._startingPosition;
     }
 
-    movePlayerToStartingPosition(player: Player) {
-        this.moveCreatureToPoint(player, this._startingPosition);
+    pointInWater(point: Point): boolean {
+        for (var water of this._water) if (water.contains(point) || water.isInBoundary(point)) return true;
+        return false;
     }
 }

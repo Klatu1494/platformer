@@ -41,4 +41,11 @@ class Tile {
             this.top < point.y && point.y < this.bottom
         );
     }
+
+    isInBoundary(point: Point) {
+        return (
+            this.left <= point.x && point.x <= this.right && (this.top == point.y || this.bottom == point.y) ||
+            this.top <= point.y && point.y <= this.bottom && (this.left == point.x || this.right == point.x)
+        )
+    }
 }
