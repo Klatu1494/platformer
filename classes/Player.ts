@@ -70,12 +70,12 @@ class Player {
         tile = level.getTileThatCollidesWith(new Point(x + 0.25, y));
         if (tile) {
             y = tile.bottom;
-            this._verticalSpeed = 0;
+            this._verticalSpeed *= -0.1;
         }
         tile = level.getTileThatCollidesWith(new Point(x + 0.75, y));
         if (tile) {
             y = tile.bottom;
-            this._verticalSpeed = 0;
+            this._verticalSpeed *= -0.1;
         }
         this._onGround = !this._verticalSpeed;
         this.position = new Point(x, y);
