@@ -17,11 +17,35 @@ class Player {
     }
 
     move(pressedKeys: Array<boolean>, level: Level) {
+        function checkHorizontalCollisionOn(point: Point, leftCollision: boolean) {
+            var tile: Tile = level.getTileThatCollidesWith(point);
+            if (tile) {
+                x = leftCollision ? tile.right : tile.left - 1;
+                self._horizontalSpeed = 0;
+            }
+        }
+
+        function checkFloorCollisionOn(point: Point) {
+            var tile: Tile = level.getTileThatCollidesWith(point);
+            if (tile) {
+                y = tile.top - 1;
+                self._verticalSpeed = 0;
+            }
+        }
+
+        function checkCeilCollisionOn(point: Point) {
+            var tile: Tile = level.getTileThatCollidesWith(point);
+            if (tile) {
+                y = tile.bottom;
+                self._verticalSpeed *= -0.1;
+            }
+        }
+
+        var self: Player = this;
         var x: number = this.position.x;
         var y: number = this.position.y;
         var xDirection: number;
         var yDirection: number;
-        var tile: Tile;
         //horizontal movement
         if (pressedKeys[this._primaryControls.left] || pressedKeys[this._secondaryControls.left])
             this._horizontalSpeed -= this._acceleration;
@@ -51,46 +75,14 @@ class Player {
         }
         x += this._horizontalSpeed;
         y += this._verticalSpeed;
-        tile = level.getTileThatCollidesWith(new Point(x, y + 0.25));
-        if (tile) {
-            x = tile.right;
-            this._horizontalSpeed = 0;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x + 1, y + 0.25));
-        if (tile) {
-            x = tile.left - 1;
-            this._horizontalSpeed = 0;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x, y + 0.75));
-        if (tile) {
-            x = tile.right;
-            this._horizontalSpeed = 0;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x + 1, y + 0.75));
-        if (tile) {
-            x = tile.left - 1;
-            this._horizontalSpeed = 0;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x + 0.25, y + 1));
-        if (tile) {
-            y = tile.top - 1;
-            this._verticalSpeed = 0;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x + 0.75, y + 1));
-        if (tile) {
-            y = tile.top - 1;
-            this._verticalSpeed = 0;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x + 0.25, y));
-        if (tile) {
-            y = tile.bottom;
-            this._verticalSpeed *= -0.1;
-        }
-        tile = level.getTileThatCollidesWith(new Point(x + 0.75, y));
-        if (tile) {
-            y = tile.bottom;
-            this._verticalSpeed *= -0.1;
-        }
+        checkHorizontalCollisionOn(new Point(x, y + 0.25), true);
+        checkHorizontalCollisionOn(new Point(x, y + 0.75), true);
+        checkHorizontalCollisionOn(new Point(x + 1, y + 0.25), false);
+        checkHorizontalCollisionOn(new Point(x + 1, y + 0.75), false);
+        checkFloorCollisionOn(new Point(x + 0.25, y + 1));
+        checkFloorCollisionOn(new Point(x + 0.75, y + 1));
+        checkCeilCollisionOn(new Point(x + 0.25, y));
+        checkCeilCollisionOn(new Point(x + 0.75, y));
         this._onGround = !this._verticalSpeed;
         this.position = new Point(x, y);
     }
