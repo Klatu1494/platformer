@@ -2,12 +2,12 @@ class Player {
     private _primaryControls: Controls;
     private _secondaryControls: Controls;
     private _acceleration: number = 0.02;
-    private _weight = 0.005;
-    private _horizontalSpeed: number;
-    private _friction = 0.004;
-    private _maxHorizontalSpeed: number = 0.15;
-    private _verticalSpeed: number;
     private _maxVerticalSpeed: number = 0.24;
+    private _weight = 0.007; //this value must not divide this._maxVerticalSpeed
+    private _horizontalSpeed: number;
+    private _friction = 0.01;
+    private _maxHorizontalSpeed: number = 0.2;
+    private _verticalSpeed: number;
     private _onGround: boolean;
     position: Point;
 
@@ -61,13 +61,11 @@ class Player {
         if (tile) {
             y = tile.top - 1;
             this._verticalSpeed = 0;
-            this._onGround = true;
         }
         tile = level.getTileThatCollidesWith(new Point(x + 0.75, y + 1));
         if (tile) {
             y = tile.top - 1;
             this._verticalSpeed = 0;
-            this._onGround = true;
         }
         tile = level.getTileThatCollidesWith(new Point(x + 0.25, y));
         if (tile) {
@@ -79,6 +77,7 @@ class Player {
             y = tile.bottom;
             this._verticalSpeed = 0;
         }
+        this._onGround = !this._verticalSpeed;
         this.position = new Point(x, y);
     }
 
