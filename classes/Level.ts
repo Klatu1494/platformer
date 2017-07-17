@@ -4,13 +4,15 @@ class Level {
     private _height: number;
     private _walls: Array<Tile>;
     private _startingPosition: Point;
+    private _assets: IAssets;
 
-    constructor(array: Array<Array<string>>, charSize: number) {
+    constructor(array: Array<Array<string>>, charSize: number, assets: IAssets) {
         var width: number = 0;
         var height: number = array.length;
         for (var row of array) width = Math.max(width, row.length);
         this._width = width * charSize;
         this._height = height * charSize;
+        this._assets = assets;
         this._walls = [];
         for (var i: number = 0; i < height; i++) {
             for (var j: number = 0; j < array[i].length; j++) {
@@ -45,9 +47,9 @@ class Level {
         return this._canvas;
     }
 
-    checkColisionOn(point: Point): boolean {
-        for (var wall of this._walls) if (wall.contains(point)) return true;
-        return false;
+    getTileThatCollidesWith(point: Point): Tile {
+        for (var wall of this._walls) if (wall.contains(point)) return wall;
+        return null;
     }
 
     draw(tileSide: number, leftMargin: number, topMargin: number) {
@@ -56,12 +58,14 @@ class Level {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.translate(leftMargin, topMargin);
         for (var wall of this._walls)
-            ctx.fillRect(
-                Math.floor(wall.left * tileSide),
-                Math.floor(wall.top * tileSide),
-                Math.ceil(wall.side * tileSide),
-                Math.ceil(wall.side * tileSide)
-            );
+            if (this._assets.wallImage)
+                ctx.drawImage(
+                    this._assets.wallImage,
+                    Math.floor(wall.left * tileSide),
+                    Math.floor(wall.top * tileSide),
+                    Math.ceil(wall.side * tileSide),
+                    Math.ceil(wall.side * tileSide)
+                );
         ctx.translate(-leftMargin, -topMargin);
     }
 

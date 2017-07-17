@@ -203,15 +203,17 @@ addEventListener("load", () => {
         if (mouseDown) {
             var canvasX = e.offsetX;
             var canvasY = e.offsetY;
-            currentTool.onMouseMove(
-                grid,
-                ctx,
-                Math.floor(canvasX / tileSide),
-                Math.floor(canvasY / tileSide),
-                canvasX,
-                canvasY
-            );
-            updateOutput();
+            if (0 < canvasX && canvasX < canvas.width && 0 < canvasY && canvasY < canvas.height) {
+                currentTool.onMouseMove(
+                    grid,
+                    ctx,
+                    Math.floor(canvasX / tileSide),
+                    Math.floor(canvasY / tileSide),
+                    canvasX,
+                    canvasY
+                );
+                updateOutput();
+            }
         }
     });
     canvas.addEventListener("mouseup", function (e: MouseEvent) {
