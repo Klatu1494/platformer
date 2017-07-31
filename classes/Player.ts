@@ -87,6 +87,15 @@ class Player {
         this.position = new Point(x, y);
     }
 
+    hide(ctx: CanvasRenderingContext2D, tileSide: number, leftMargin: number, topMargin: number) {
+        ctx.clearRect(
+            Math.floor(leftMargin + this.position.x * tileSide),
+            Math.floor(topMargin + this.position.y * tileSide),
+            Math.ceil(tileSide),
+            Math.ceil(tileSide)
+        );
+    }
+
     draw(ctx: CanvasRenderingContext2D, tileSide: number, leftMargin: number, topMargin: number) {
         ctx.fillRect(
             Math.floor(leftMargin + this.position.x * tileSide),
